@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: secunda
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      API_KEY: UrAqrfbGJaxLxbdABCZNOBiuzMjw9HW1J3UWzRm7
+      L5_SWAGGER_CONST_HOST: http://127.0.0.1:8000
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  db:
+    image: postgres:17
+    container_name: laravel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: secunda
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./secunda_db.sql:/docker-entrypoint-initdb.d/secunda_db.sql
+
+volumes:
+  db_data:

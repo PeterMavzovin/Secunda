@@ -1,0 +1,965 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "Документация API вашего приложения",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Основной API сервер"
+        }
+    ],
+    "paths": {
+        "/api/activities": {
+            "get": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Получить список всех видов деятельности",
+                "operationId": "53e7a0b67f6097ed90245000764b2e5e",
+                "responses": {
+                    "200": {
+                        "description": "Список всех видов деятельности",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activity"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Создать новую деятельность",
+                "operationId": "8aa12114961e22767ecdad7c24be367e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Молочная продукция"
+                                    },
+                                    "parent_id": {
+                                        "type": "integer",
+                                        "example": 5,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Деятельность создана"
+                    },
+                    "422": {
+                        "description": "Нельзя создать деятельность глубже 3-го уровня"
+                    }
+                }
+            }
+        },
+        "/api/activities/{id}": {
+            "get": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Получить вид деятельности по ID",
+                "operationId": "6d75cdd5535b9b12358448ec198faba4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID деятельности",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о деятельности"
+                    },
+                    "404": {
+                        "description": "Деятельность не найдена"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Обновить деятельность по ID",
+                "operationId": "064379988a5fe2c974ae5ab18f0cddfd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID деятельности",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Еда и напитки"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Деятельность обновлена"
+                    },
+                    "404": {
+                        "description": "Деятельность не найдена"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Удалить деятельность по ID",
+                "operationId": "d822403ad9a85feb951b1073858a072d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID деятельности",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Деятельность удалена"
+                    },
+                    "404": {
+                        "description": "Деятельность не найдена"
+                    }
+                }
+            }
+        },
+        "/api/activities/{id}/organizations": {
+            "get": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Получить организации, связанные с данной деятельностью",
+                "operationId": "78cac0f5a4f521f7269c4db31835c917",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID деятельности",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список организаций, связанных с деятельностью"
+                    },
+                    "404": {
+                        "description": "Деятельность не найдена"
+                    }
+                }
+            }
+        },
+        "/api/activities/{id}/organizations-with-descendants": {
+            "get": {
+                "tags": [
+                    "Деятельности"
+                ],
+                "summary": "Получить организации, связанные с данной деятельностью и её потомками",
+                "operationId": "522653bce5c60cd51c2ca2f8a59b4e4e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID деятельности",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Организации, связанные с деятельностью и её потомками"
+                    },
+                    "404": {
+                        "description": "Деятельность не найдена"
+                    }
+                }
+            }
+        },
+        "/api/buildings": {
+            "get": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Получить список всех зданий",
+                "operationId": "704d1f7897ed7a3b8d29dacea66823ad",
+                "responses": {
+                    "200": {
+                        "description": "Список зданий успешно получен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Building"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Создать новое здание",
+                "operationId": "c8f8399919e01b1e4e2e2f6a9f1f5107",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "address"
+                                ],
+                                "properties": {
+                                    "address": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "г. Москва, ул. Ленина, 10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Здание успешно создано",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Building"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                }
+            }
+        },
+        "/api/buildings/{id}": {
+            "get": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Получить информацию о конкретном здании",
+                "operationId": "7c2e9a5ec44b127b681717d1d5b91152",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID здания",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о здании",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Building"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Здание не найдено"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Обновить данные здания",
+                "operationId": "0bd50384a833589efa669b51b8e1ff88",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID здания",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "address"
+                                ],
+                                "properties": {
+                                    "address": {
+                                        "type": "string",
+                                        "example": "г. Санкт-Петербург, Невский пр., 12"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Здание успешно обновлено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Building"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Здание не найдено"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Удалить здание",
+                "operationId": "db5360c892964cf865373a95f5da4633",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID здания",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Здание удалено"
+                    },
+                    "404": {
+                        "description": "Здание не найдено"
+                    }
+                }
+            }
+        },
+        "/api/buildings/{id}/organizations": {
+            "get": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Получить список организаций, находящихся в здании",
+                "operationId": "30f8994727996ee13a6408ec39a88ac9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID здания",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Организации успешно получены",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "building": {
+                                            "type": "string",
+                                            "example": "ул. Ленина, 10"
+                                        },
+                                        "organizations": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Organization"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/buildings/nearby": {
+            "get": {
+                "tags": [
+                    "Здания"
+                ],
+                "summary": "Найти ближайшие здания по координатам",
+                "description": "Возвращает список зданий в пределах указанного радиуса (по умолчанию 5 км)",
+                "operationId": "7cf303a1ca50c70f4562626538463214",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "Широта",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": 55.751244
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "Долгота",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": 37.618423
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "Радиус поиска (в км)",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ближайшие здания успешно получены",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Building"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "center": {
+                                                    "properties": {
+                                                        "latitude": {
+                                                            "type": "number",
+                                                            "example": 55.751244
+                                                        },
+                                                        "longitude": {
+                                                            "type": "number",
+                                                            "example": 37.618423
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "radius_km": {
+                                                    "type": "number",
+                                                    "example": 5
+                                                },
+                                                "found": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/organizations": {
+            "get": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Получить список всех организаций",
+                "operationId": "42efb13746ba71d73c330585f09ecef8",
+                "responses": {
+                    "200": {
+                        "description": "Список организаций",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Создать новую организацию",
+                "operationId": "2d849ce559213546c5ec62ee8ea255db",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "building_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "ООО Рога и Копыта"
+                                    },
+                                    "building_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "phones": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "+7 999 123-45-67"
+                                        }
+                                    },
+                                    "activities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 5
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Организация успешно создана"
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных"
+                    }
+                }
+            }
+        },
+        "/api/organizations/{id}": {
+            "get": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Получить организацию по ID",
+                "operationId": "68e75650b204083886e125e02aaa2f4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID организации",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация об организации"
+                    },
+                    "404": {
+                        "description": "Организация не найдена"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Обновить организацию по ID",
+                "operationId": "a6863f1e78baca329a5507e9d3d8e32d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID организации",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "ООО Обновлённое Имя"
+                                    },
+                                    "building_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "phones": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "activities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Организация обновлена"
+                    },
+                    "404": {
+                        "description": "Организация не найдена"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Удалить организацию по ID",
+                "operationId": "437c30a09c2dda264e402fb5ca96e873",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID организации",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Организация удалена"
+                    },
+                    "404": {
+                        "description": "Организация не найдена"
+                    }
+                }
+            }
+        },
+        "/api/organizations/nearby": {
+            "get": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Найти организации поблизости",
+                "operationId": "2c4aaebf1645ecdcad5af01f7b635407",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "Широта",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": 55.751244
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "Долгота",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": 37.618423
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "Радиус поиска (в км, по умолчанию 5)",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Организации поблизости",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Organization"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "radius_km": {
+                                                    "type": "number"
+                                                },
+                                                "found_buildings": {
+                                                    "type": "integer"
+                                                },
+                                                "found_organizations": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/organizations/search": {
+            "get": {
+                "tags": [
+                    "Организации"
+                ],
+                "summary": "Поиск организаций по названию",
+                "operationId": "40b8b5635dc20a80567117691e82d2e0",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Поисковая строка (часть названия организации)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Рога"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Результаты поиска",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Не указана поисковая строка"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Activity": {
+                "title": "Activity",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Еда"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "_lft": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "_rgt": {
+                        "type": "integer",
+                        "example": 8
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Building": {
+                "title": "Здание",
+                "description": "Здание, где расположена организация",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "г. Москва, ул. Ленина, 10"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 55.7558
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 37.6173
+                    }
+                },
+                "type": "object"
+            },
+            "Organization": {
+                "title": "Организация",
+                "description": "Модель организации",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "ООО Ромашка"
+                    },
+                    "building_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "phones": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "+7 (900) 123-45-67"
+                        }
+                    },
+                    "activities": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Activity"
+                        }
+                    },
+                    "building": {
+                        "$ref": "#/components/schemas/Building"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Деятельности",
+            "description": "Управление видами деятельности и связанные организации"
+        },
+        {
+            "name": "Здания",
+            "description": "Управление зданиями и поиск организаций, расположенных в них"
+        },
+        {
+            "name": "Организации",
+            "description": "Управление организациями и поиск по геолокации"
+        }
+    ]
+}
